@@ -10,10 +10,11 @@ namespace ProductCatalogApi.Data
 {
     public class CatalogContext : DbContext
     {
-        public CatalogContext(DbContextOptions options):base(options)
-        {
+        public DbSet<CatalogType> CatalogTypes { get; set; }
+        public DbSet<CatalogBrand> CatalogBrands { get; set; }
+        public DbSet<CatalogItem> CatalogItems { get; set; }
 
-        }
+        public CatalogContext(DbContextOptions options):base(options){}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,12 +28,12 @@ namespace ProductCatalogApi.Data
             builder.ToTable("Catalog");
             builder.Property(c => c.Id)
                 .ForSqlServerUseSequenceHiLo("catalog_hilo")
-                .IsRequired(true);
+                .IsRequired();
             builder.Property(c => c.Name)
-                .IsRequired(true)
+                .IsRequired()
                 .HasMaxLength(50);
             builder.Property(c => c.Price)
-                .IsRequired(true);
+                .IsRequired();
             builder.Property(c => c.PictureUrl)
                 .IsRequired(false);
             builder.HasOne(c => c.CatalogBrand)
@@ -46,12 +47,26 @@ namespace ProductCatalogApi.Data
 
         private void ConfigureCatalogType(EntityTypeBuilder<CatalogType> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("CatalogType");
+            builder.Property(c => c.Id)
+                .ForSqlServerUseSequenceHiLo("catalog_type_hilo")
+                .IsRequired();
+            builder.Property(c => c.Type)
+                .IsRequired()
+                .HasMaxLength(100);
         }
 
         private void ConfigureCatalogBrand(EntityTypeBuilder<CatalogBrand> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("CatalogBrand");
+            builder.Property(c => c.Id)
+                .ForSqlServerUseSequenceHiLo("catalog_brand_hilo")
+                .IsRequired();
+            builder.Property(c => c.Brand)
+                .IsRequired()
+                .HasMaxLength(100);
         }
+
+        
     }
 }
